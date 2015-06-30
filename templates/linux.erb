@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# ERB generated userdata script
+
+PE_MASTER='<%= @pe_master_hostname %>'
+AWS_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+
+<%- if @nodename -%>
+# since we were passed @nodename we are prepending it
+# to instance-id
+PE_CERTNAME="<%= @nodename %>-${AWS_INSTANCE_ID}"
+
+<%- else -%>
+PE_CERTNAME="${AWS_INSTANCE_ID}" 
+
+<%- end -%>
+# these are attributes we know already
+PP_INSTANCE_ID="${AWS_INSTANCE_ID}"
+
+<%- if @pp_image_name -%>
+PP_IMAGE_NAME='<%= @pp_image_name %>'
+<%- else -%>
+PP_IMAGE_NAME=$(curl -s http://169.254.169.254/latest/meta-data/ami-id) 
+<%- end -%>
+
+<%-# these are all the OIDs that we may map or already have -%>
+<%-# https://docs.puppetlabs.com/puppet/latest/reference/ssl_attributes_extensions.html -%>
+function write_csr_attributes () {
+  if [ ! -d /etc/puppetlabs/puppet ]; then
+    mkdir -p /etc/puppetlabs/puppet
+  fi
+
+  cat > /etc/puppetlabs/puppet/csr_attributes.yaml << YAML
+extension_requests:
+  pp_instance_id: $PP_INSTANCE_ID
+  pp_image_name: $PP_IMAGE_NAME
+<%- if @pp_uuid -%>
+  pp_uuid: '<%= @pp_uuid %>'
+<%- end -%>
+<%- if @pp_preshared_key -%>
+  pp_preshared_key: '<%= @pp_preshared_key %>'
+<%- end -%>
+<%- if @pp_cost_center -%>
+  1.3.6.1.4.1.34380.1.1.5: '<%= @pp_cost_center %>'
+<%- end -%>
+<%- if @pp_product -%>
+  1.3.6.1.4.1.34380.1.1.6: '<%= @pp_product %>'
+<%- end -%>
+<%- if @pp_project -%>
+  1.3.6.1.4.1.34380.1.1.7: '<%= @pp_project %>'
+<%- end -%>
+<%- if @pp_application -%>
+  1.3.6.1.4.1.34380.1.1.8: '<%= @pp_application %>'
+<%- end -%>
+<%- if @pp_service -%>
+  1.3.6.1.4.1.34380.1.1.9: '<%= @pp_service %>'
+<%- end -%>
+<%- if @pp_employee -%>
+  1.3.6.1.4.1.34380.1.1.10: '<%= @pp_employee %>'
+<%- end -%>
+<%- if @pp_created_by -%>
+  1.3.6.1.4.1.34380.1.1.11: '<%= @pp_created_by %>'
+<%- end -%>
+<%- if @pp_environment -%>
+  1.3.6.1.4.1.34380.1.1.12: '<%= @pp_environment %>' 
+<%- end -%>
+<%- if @pp_role -%>
+  1.3.6.1.4.1.34380.1.1.13: '<%= @pp_role %>'
+<%- end -%>
+<%- if @pp_software_version -%>
+  1.3.6.1.4.1.34380.1.1.14: '<%= @pp_software_version %>'
+<%- end -%>
+<%- if @pp_department -%>
+  1.3.6.1.4.1.34380.1.1.15: '<%= @pp_department %>' 
+<%- end -%>
+<%- if @pp_cluster -%>
+  1.3.6.1.4.1.34380.1.1.16: '<%= @pp_cluster %>'
+<%- end -%>
+<%- if @pp_provisioner -%>
+  1.3.6.1.4.1.34380.1.1.17: '<%= @pp_provisioner %>'
+<%- end -%>
+YAML
+}
+
+function install_pe_agent () {
+  curl -sk https://$PE_MASTER:8140/packages/current/install.bash | /bin/bash -s agent:certname=$PE_CERTNAME
+}
+
+write_csr_attributes
+install_pe_agent
