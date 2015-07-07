@@ -1,4 +1,4 @@
-define tse_awsnodes::linuxnode (
+define awsdemo::linuxnode (
   $nodename = $title,
   $availability_zone = $::ec2_placement_availability_zone,
   $image_id = $tse_awsnodes::params::redhat7,

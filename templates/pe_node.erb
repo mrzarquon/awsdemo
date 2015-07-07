@@ -53,8 +53,9 @@ PE_SEARCH
 
 }
 
-function write_masteranswers() {
-  cat > /opt/awsdemo/masteranswers.txt << ANSWERS
+# all in one
+function write_answers() {
+  cat > /opt/awsdemo/answers.txt << ANSWERS
 q_all_in_one_install=y
 q_backup_and_purge_old_configuration=n
 q_backup_and_purge_old_database_directory=n
@@ -92,6 +93,79 @@ q_skip_backup=y
 ANSWERS
 }
 
+# master role
+function write_masteranswers () {
+  cat > /opt/awsdemo/answers.txt << ANSWERS
+q_all_in_one_install=n
+q_database_install=n
+q_install=y
+q_pe_database=n
+q_puppet_cloud_install=y
+q_puppet_enterpriseconsole_install=n
+q_puppet_symlinks_install=y
+q_puppetagent_certname=master-$INSTANCE_ID
+q_puppetagent_install=y
+q_puppetagent_server=$PRIVATE_HOSTNAME
+q_puppetdb_hostname=$PUPPETDB_HOSTNAME
+q_puppetdb_install=n
+q_puppetdb_port=8081
+q_puppetmaster_certname=master-$INSTANCE_ID
+q_puppetmaster_dnsaltnames=$INSTANCE_ID,$PRIVATE_HOSTNAME,puppet,$PE_DNS_ALTNAMES
+q_puppetmaster_enterpriseconsole_hostname=$CONSOLE_HOSTNAME
+q_puppetmaster_enterpriseconsole_port=443
+q_puppetmaster_install=y
+q_run_updtvpkg=n
+q_vendor_packages_install=y
+q_enable_future_parser=n
+q_skip_backup=y
+ANSWERS
+}
+# console role
+function write_consoleanswers () {
+  cat > /opt/awsdemo/answers.txt << ANSWERS
+q_all_in_one_install=n
+q_database_host=$PUPPETDB_HOSTNAME
+q_database_install=n
+q_database_port=5432
+q_fail_on_unsuccessful_master_lookup=n
+q_install=y
+q_pe_database=n
+q_puppet_cloud_install=n
+q_puppet_enterpriseconsole_auth_database_name=console_auth
+q_puppet_enterpriseconsole_auth_database_password=fUWgOb8IIeMUAL1o5a1d
+q_puppet_enterpriseconsole_auth_database_user=console_auth
+q_puppet_enterpriseconsole_auth_password=$PE_PASSWORD
+q_puppet_enterpriseconsole_database_name=console
+q_puppet_enterpriseconsole_database_password=MCScXQsCPvl48D5gYDsg
+q_puppet_enterpriseconsole_database_user=console
+q_puppet_enterpriseconsole_httpd_port=443
+q_puppet_enterpriseconsole_install=y
+q_puppet_enterpriseconsole_master_hostname=$MASTER_HOSTNAME
+q_puppet_enterpriseconsole_smtp_host=localhost
+q_puppet_enterpriseconsole_smtp_password=
+q_puppet_enterpriseconsole_smtp_port=25
+q_puppet_enterpriseconsole_smtp_use_tls=n
+q_puppet_enterpriseconsole_smtp_user_auth=n
+q_puppet_enterpriseconsole_smtp_username=
+q_puppet_symlinks_install=y
+q_puppetagent_certname=ubuntu1204b
+q_puppetagent_install=y
+q_puppetagent_server=ubuntu1204a
+q_puppetca_install=n
+q_puppetdb_database_name=pe-puppetdb
+q_puppetdb_database_password=XN6YPvyzAMUZpe86RoTH
+q_puppetdb_database_user=pe-puppetdb
+q_puppetdb_hostname=master
+q_puppetdb_install=n
+q_puppetdb_port=8081
+q_puppetmaster_enterpriseconsole_hostname=localhost
+q_puppetmaster_install=n
+q_run_updtvpkg=n
+q_vendor_packages_install=y
+q_enable_future_parser=n
+q_skip_backup=y
+ANSWERS
+}
 
 function write_csr_attributes () {
   if [ ! -d /etc/puppetlabs/puppet ]; then
@@ -160,6 +234,8 @@ function create_opt {
 }
 
 function configure_redhat() {
+
+  echo "Disabling SELinux, setting time"
   setenforce 0
 
   #living on the edge
@@ -169,7 +245,8 @@ function configure_redhat() {
 
 }
 
-function install_puppetmaster() {
+function install_pe() {
+  echo "Installing Puppet Enterprise ${PE_BUILD}"
   if [ ! -d /opt/awsdemo/pe ]; then
     mkdir -p /opt/awsdemo/pe
   fi
@@ -177,8 +254,10 @@ function install_puppetmaster() {
     curl -L -o /opt/awsdemo/pe-installer.tar.gz "https://pm.puppetlabs.com/cgi-bin/download.cgi?ver=$PE_BUILD&dist=el&arch=x86_64&rel=7"
     tar --extract --file=/opt/awsdemo/pe-installer.tar.gz --strip-components=1 --directory=/opt/awsdemo/pe/
   fi
-  write_masteranswers
-  /opt/awsdemo/pe/puppet-enterprise-installer -a /opt/awsdemo/masteranswers.txt
+  
+  write_answers
+  
+  /opt/awsdemo/pe/puppet-enterprise-installer -a /opt/awsdemo/answers.txt
 
   # nuke autosign for right now, we might fix this with a module later for certsigner
   echo "*" > /etc/puppetlabs/puppet/autosign.conf
@@ -187,14 +266,11 @@ function install_puppetmaster() {
 
 function provision_puppet() {
 
-  echo "Disabling SELinux, setting time"
   configure_redhat
 
-  echo "Formatting / mounting /dev/xvdb as /opt"
   create_opt
-  
-  echo "Installing Puppet Enterprise ${PE_BUILD}"
-  install_puppetmaster
+
+  install_pe
 
 }
 

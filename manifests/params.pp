@@ -1,4 +1,4 @@
-class tse_awsnodes::params {
+class awsdemo::params {
 
   case $::ec2_region {
     # North America
