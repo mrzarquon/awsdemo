@@ -1,6 +1,6 @@
 class tse_awsnodes::example {
   include tse_awsnodes::params
- 
+
   ec2_instance { "examplenode-${ectags['created_by']}":
     ensure            => 'running',
     availability_zone => '$::ec2_placement_availability_zone',

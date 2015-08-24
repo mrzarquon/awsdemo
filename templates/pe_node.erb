@@ -15,7 +15,7 @@ INSTANCE_ID=$(curl -fs $AWS_MD_URL/instance-id)
 
 function install_search {
 
-  yum install -y ruby && gem install aws-sdk-core
+  yum install -y ruby ntpdate && gem install aws-sdk-core
 
   cat > /opt/awsdemo/pe_search.rb << PE_SEARCH
 #!/usr/bin/env ruby

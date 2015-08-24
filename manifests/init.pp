@@ -18,5 +18,5 @@ class tse_awsnodes (
     key_name           => $key_name,
     pe_master_hostname => $::ec2_local_hostname,
   }
-  
+
 }

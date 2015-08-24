@@ -14,7 +14,7 @@ define awsdemo::linuxnode (
   $pe_master_hostname,
 ) {
   include tse_awsnodes::params
-  
+
   ec2_instance { $nodename:
     ensure            => 'running',
     availability_zone => $availability_zone,
@@ -27,7 +27,7 @@ define awsdemo::linuxnode (
     tags              => {
       'department'    => $pp_department,
       'project'       => $pp_project,
-      'created_by'    => $pp_created_by, 
+      'created_by'    => $pp_created_by,
     },
     user_data         => template('tse_awsnodes/linux.erb'),
   }
