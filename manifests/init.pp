@@ -1,4 +1,4 @@
-class tse_awsnodes (
+class awsdemo (
   $region = 'us-west-2',
   $department = 'TSE',
   $project = 'Infrastructure',

@@ -1,19 +1,19 @@
 define awsdemo::linuxnode (
   $nodename = $title,
-  $availability_zone = $::ec2_placement_availability_zone,
-  $image_id = $tse_awsnodes::params::redhat7,
-  $region = $::ec2_region,
-  $instance_type = 'm3.medium',
-  $security_groups = $tse_awsnodes::params::security_groups,
-  $subnet = $tse_awsnodes::params::subnet,
-  $pe_version_string = $::pe_version,
-  $pp_department = 'TSE',
+  $availability_zone = $awsdemo::params::availability_zone,
+  $image_id = $awsdemo::params::redhat7,
+  $region = $awsdemo::params::region,
+  $instance_type = 'm4.medium',
+  $security_groups = $awsdemo::params::security_groups,
+  $subnet = $awsdemo::params::subnet,
+  $pe_version_string = $awsdemo::params::pe_version_string,
+  $pp_department,
   $pp_project,
   $pp_created_by,
   $key_name,
   $pe_master_hostname,
 ) {
-  include tse_awsnodes::params
+  include awsdemo::params
 
   ec2_instance { $nodename:
     ensure            => 'running',
@@ -31,6 +31,5 @@ define awsdemo::linuxnode (
     },
     user_data         => template('tse_awsnodes/linux.erb'),
   }
-
 
 }

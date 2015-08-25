@@ -1,21 +1,29 @@
 define awsdemo::pe_node(
   $nodename = $title,
-  $availability_zone = $::ec2_placement_availability_zone,
+  $availability_zone = $awsdemo::params::availability_zone,
   $image_id = $tse_awsnodes::params::redhat7,
   $region = $::ec2_region,
   $instance_type = 'm3.medium',
-  $security_groups = $tse_awsnodes::params::security_groups,
-  $subnet = $tse_awsnodes::params::subnet,
-  $department = 'TSE',
+  $security_groups = $awsdemo::params::security_groups,
+  $subnet = $awsdemo::params::subnet,
+  $department,
   $project,
   $created_by,
   $key_name,
   $pe_admin_password,
   $pe_role,
   $pe_build,
+  $pe_dns_altnames,
   $iam_profile,
-) inherits awsdemo::params {
-  
+) {
+  include awsdemo::params
+
+  $pp_role = $pe_role
+  $pp_created_by = $created_by
+  $pp_department = $department
+  $pp_project = $project
+
+
   ec2_instance { $nodename:
     ensure                    => 'running',
     availability_zone         => $availability_zone,
@@ -30,9 +38,11 @@ define awsdemo::pe_node(
       'department'            => $pp_department,
       'project'               => $pp_project,
       'created_by'            => $pp_created_by,
+      'pe_role'               => $pe_role,
+      'pe_build'              => $pe_build,
     },
     user_data     => template('awsdemo/pe_node.erb'),
-    block_devices => [ 
+    block_devices => [
       {
         device_name           => '/dev/sda1',
         volume_size           => '8',
@@ -44,7 +54,7 @@ define awsdemo::pe_node(
         delete_on_termination => True,
       }
     ],
-    
+
   }
 
 

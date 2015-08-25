@@ -1,5 +1,9 @@
 class awsdemo::params {
 
+  $availability_zone = $ec2_metadata['placement']['availability-zone']
+  $pe_version_string = $pe_version
+
+
   case $::ec2_region {
     # North America
     'us-west-2': {
