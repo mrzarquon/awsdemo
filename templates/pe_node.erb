@@ -7,7 +7,7 @@
 PE_BUILD='<%= @pe_build %>'
 PE_DOWNLOAD_URL='https://s3.amazonaws.com/pe-builds/released/'
 PE_DNS_ALTNAMES='<%= @pe_dns_altnames %>'
-PE_PASSWORD='<%= @pe_admin_password %>'
+PE_ADMIN_PASSWORD='<%= @pe_admin_password %>'
 PE_ROLE='<%= @pe_role %>'
 AWS_MD_URL='http://169.254.169.254/latest/meta-data/'
 PRIVATE_HOSTNAME=$(curl -fs $AWS_MD_URL/hostname)
@@ -57,10 +57,18 @@ PE_SEARCH
 
 function write_answers () {
   case $PE_ROLE in
-    'aio' ) write_aio_answers;
-    'master' ) write_master_answers;
-    'puppetdb' ) write_puppetdb_answers;
-    'console' ) write_console_answers;
+    'aio' )
+      write_aio_answers
+      ;;
+    'master' )
+      write_master_answers
+      ;;
+    'puppetdb' )
+      write_puppetdb_answers
+      ;;
+    'console' )
+      write_console_answers
+      ;;
   esac;
 }
 
@@ -92,15 +100,14 @@ q_puppetagent_server=$PRIVATE_HOSTNAME
 q_puppetdb_hostname=$PRIVATE_HOSTNAME
 q_puppetdb_install=y
 q_puppetdb_port=8081
-q_puppetmaster_certname=m$PRIVATE_HOSTNAME
+q_puppetmaster_certname=$PRIVATE_HOSTNAME
 q_puppetmaster_dnsaltnames=$INSTANCE_ID,$PRIVATE_HOSTNAME,$PUBLIC_HOSTNAME,puppet,$PE_DNS_ALTNAMES
 q_puppetmaster_enterpriseconsole_hostname=localhost
 q_puppetmaster_enterpriseconsole_port=443
 q_puppetmaster_install=y
 q_run_updtvpkg=n
 q_vendor_packages_install=y
-q_enable_future_parser=n
-q_skip_backup=y
+q_puppetmaster_r10k_remote='https://github.com/mrzarquon/aws-control-repo'
 ANSWERS
 }
 
@@ -268,10 +275,17 @@ function install_pe() {
 
   write_answers
 
-  /opt/awsdemo/pe/puppet-enterprise-installer -a /opt/awsdemo/answers.txt
+  /opt/awsdemo/pe/puppet-enterprise-installer -a /opt/awsdemo/answers.txt -l /opt/awsdemo/installer.log
 
   # nuke autosign for right now, we might fix this with a module later for certsigner
   echo "*" > /etc/puppetlabs/puppet/autosign.conf
+  service pe-puppetserver restart
+}
+
+function configure_master() {
+  /usr/local/bin/r10k deploy environment -v
+  /usr/local/bin/puppet apply -e 'include pe_role::master::prereq'
+  /usr/local/bin/puppet apply -e 'include pe_role::master'
   service pe-puppetserver restart
 }
 
@@ -282,6 +296,8 @@ function provision_puppet() {
   create_opt
 
   install_pe
+
+  configure_master
 
 }
 

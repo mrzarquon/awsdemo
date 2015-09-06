@@ -3,7 +3,10 @@ awsdemo::pe_node { 'tse-testmaster' :
   image_id          => 'ami-4dbf9e7d',
   region            => 'us-west-2',
   instance_type     => 'm4.xlarge',
-  security_groups => [ 'tse-masters', 'tse-crossconnect'],
+  security_groups   => [
+    'tse-master',
+    'tse-crossconnect'
+  ],
   subnet            => 'tse-subnet-avza-1',
   department        => 'tse',
   project           => 'awsdemo',

@@ -1,10 +1,11 @@
 class awsdemo::params {
 
-  $availability_zone = $ec2_metadata['placement']['availability-zone']
+  $ec2_region = 'us-west-2'
+  $availability_zone = 'us-west-2a'
   $pe_version_string = $pe_version
 
 
-  case $::ec2_region {
+  case $ec2_region {
     # North America
     'us-west-2': {
       $security_groups = ['tse-agents','tse-crossconnect']
@@ -44,7 +45,7 @@ class awsdemo::params {
     }
   }
 
-  case $::ec2_placement_availability_zone {
+  case $availability_zone {
     'us-west-2a', 'ap-southeast-2a', 'eu-west-1a': {
       $subnet = 'tse-subnet-avza-1'
     }
