@@ -283,10 +283,12 @@ function install_pe() {
 }
 
 function configure_master() {
-  /usr/local/bin/r10k deploy environment -v
+  /usr/local/bin/r10k deploy environment -p -v
   /usr/local/bin/puppet apply -e 'include pe_role::master::prereq'
   /usr/local/bin/puppet apply -e 'include pe_role::master'
   service pe-puppetserver restart
+  sleep 15
+  /usr/local/bin/puppet agent -t
 }
 
 function provision_puppet() {
