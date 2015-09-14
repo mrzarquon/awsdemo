@@ -6,13 +6,13 @@ class tse_awsnodes::example {
     availability_zone => '$::ec2_placement_availability_zone',
     image_id          => $tse_awsnodes::params::amazonlinux,
     instance_type     => 't2.micro',
-    region            => $ec2region,
+    region            => $ec2_region,
     security_groups   => ['tse-agents','tse-crossconnect'],
     subnet            => $tse_awsnodes::params::subnet,
     tags              => {
-      'department'    => $ec2tags['department'],
-      'project'       => $ec2tags['project'],
-      'created_by'    => $ec2tags['created_by'],
+      'department'    => $ec2_tags['department'],
+      'project'       => $ec2_tags['project'],
+      'created_by'    => $ec2_tags['created_by'],
     },
     user_data         => template('tse_awsnodes/linux.erb'),
   }

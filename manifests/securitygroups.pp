@@ -1,10 +1,10 @@
 define awsdemo::securitygroups (
+  $created_by,
   $region = 'us-west-2',
   $department = 'TSE',
   $project = 'Infrastructure',
   $vpc_mask = '10.90.0.0',
   $vpc_name = $name,
-  $created_by,
 ) {
   $aws_tags = {
     'department' => $department,
@@ -12,7 +12,11 @@ define awsdemo::securitygroups (
     'created_by' => $created_by,
   }
 
-  ec2_securitygroup { "${name}-master":
+  $master_sg_name = "${name}-master"
+  $agents_sg_name = "${name}-agents"
+  $crossconnect_sq_name = "${name}-crossconnect"
+
+  ec2_securitygroup { $master_sg_name:
     ensure      => present,
     region      => $region,
     vpc         => $vpc_name,
@@ -39,15 +43,15 @@ define awsdemo::securitygroups (
         cidr     => '0.0.0.0/0',
       },
       {
-        cidr => "${vpc_mask}/16", 
-        port => '-1', 
+        cidr => "${vpc_mask}/16",
+        port => '-1',
         protocol => 'icmp'
       },
     ],
     tags => $aws_tags,
   }
 
-  ec2_securitygroup { "${name}-agents":
+  ec2_securitygroup { $agents_sg_name:
     ensure      => present,
     region      => $region,
     vpc         => $vpc_name,
@@ -84,8 +88,8 @@ define awsdemo::securitygroups (
         cidr     => '0.0.0.0/0',
       },
       {
-        cidr => "${vpc_mask}/16", 
-        port => '-1', 
+        cidr => "${vpc_mask}/16",
+        port => '-1',
         protocol => 'icmp'
       },
     ],
@@ -93,7 +97,7 @@ define awsdemo::securitygroups (
   }
 
 
-  ec2_securitygroup { "${name}-crossconnect":
+  ec2_securitygroup { $crossconnect_sq_name:
     ensure      => present,
     region      => $region,
     vpc         => $vpc_name,
@@ -107,6 +111,6 @@ define awsdemo::securitygroups (
       },
     ],
     tags    => $aws_tags,
-    require => Ec2_securitygroup["${name}-master","${name}-agents"],
+    require => Ec2_securitygroup[$master_sg_name,$agents_sg_name],
   }
 }

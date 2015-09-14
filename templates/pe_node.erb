@@ -5,7 +5,6 @@
 # so a lot of evaulation logic is in the awsdemo/templates/pe_node.erb file
 
 PE_BUILD='<%= @pe_build %>'
-PE_DOWNLOAD_URL='https://s3.amazonaws.com/pe-builds/released/'
 PE_DNS_ALTNAMES='<%= @pe_dns_altnames %>'
 PE_ADMIN_PASSWORD='<%= @pe_admin_password %>'
 PE_ROLE='<%= @pe_role %>'
@@ -107,7 +106,9 @@ q_puppetmaster_enterpriseconsole_port=443
 q_puppetmaster_install=y
 q_run_updtvpkg=n
 q_vendor_packages_install=y
-q_puppetmaster_r10k_remote='https://github.com/mrzarquon/aws-control-repo'
+<%- if @r10k_repo -%>
+q_puppetmaster_r10k_remote='<%= @r10k_repo %>'
+<%- end -%>
 ANSWERS
 }
 

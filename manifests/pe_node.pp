@@ -1,5 +1,7 @@
+# this is the pe_node defined type
+# this is for automating an installation of PE on a redhat 7 host, specifically
+# the AIO, Master, PuppetDB or Console Roles.
 define awsdemo::pe_node(
-  $nodename = $title,
   $availability_zone,
   $image_id,
   $region,
@@ -15,6 +17,8 @@ define awsdemo::pe_node(
   $pe_build,
   $pe_dns_altnames,
   $iam_profile,
+  $r10k_repo = 'https://github.com/mrzarquon/aws-control-repo.git',
+  $nodename = $title,
 ) {
   $pp_role = $pe_role
   $pp_created_by = $created_by
@@ -49,6 +53,4 @@ define awsdemo::pe_node(
       iops                  => '1500',
     }],
   }
-
-
 }
