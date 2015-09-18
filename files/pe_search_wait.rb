@@ -35,7 +35,7 @@ end
 # case task
 # wait
 # poll for node in pe_role to complete task (aws tag updated)
-# pe_task 
+# pe_task
 
 
 # case task
