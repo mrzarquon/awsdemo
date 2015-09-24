@@ -1,8 +1,8 @@
 define awsdemo::securitygroups (
   $created_by,
-  $region = 'us-west-2',
-  $department = 'TSE',
-  $project = 'Infrastructure',
+  $region,
+  $department,
+  $project,
   $vpc_mask = '10.90.0.0',
   $vpc_name = $name,
 ) {
@@ -95,7 +95,6 @@ define awsdemo::securitygroups (
     ],
     tags => $aws_tags,
   }
-
 
   ec2_securitygroup { $crossconnect_sq_name:
     ensure      => present,

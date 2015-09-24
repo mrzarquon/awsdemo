@@ -3,7 +3,7 @@
 # In theory the ami lookup could be turned into a function in the future
 class awsdemo::params {
 
-  $ami = {
+  $image_ids = {
     'us-west-2' => {
       'redhat7' => 'ami-4dbf9e7d',
       'redhat6' => 'ami-2faa861f',
@@ -33,12 +33,4 @@ class awsdemo::params {
     }
   }
 
-  $avz = {
-    'us-west-2a' => 'tse-subnet-avza-1',
-    'ap-southeast-2a' => 'tse-subnet-avza-1',
-    'eu-west-1a' => 'tse-subnet-avza-1',
-    'us-west-2b' => 'tse-subnet-avzb-1',
-    'ap-southeast-2b' => 'tse-subnet-avzb-1',
-    'eu-west-1b' => 'tse-subnet-avzb-1',
-  }
 }

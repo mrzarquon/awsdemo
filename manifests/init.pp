@@ -3,8 +3,8 @@
 # with the profile written, you could then call 'puppet apply your_profile.pp'
 # from any machine with this module installed and get a working PE demo env
 class awsdemo (
-  $availability_zone, #= 'us-west-2a',
-  $region, # = 'us-west-2',
+  $availability_zone,
+  $region,
   $aws_keyname,
   $created_by,
   $project,
@@ -17,6 +17,7 @@ class awsdemo (
   $zone_a_mask = '10.90.10.0',
   $zone_b_mask = '10.90.20.0',
   $zone_c_mask = '10.90.30.0',
+  $image_ids = $awsdemo::params::image_ids,
 ) inherits awsdemo::params {
   $pe_admin_password = fqdn_rand_string(32, '', "${created_by}${project}${department}${pe_build}")
 
@@ -32,25 +33,16 @@ class awsdemo (
     zone_c_mask => $zone_c_mask,
     created_by  => $created_by,
   }
-  awsdemo::securitygroups { "${project}-${department}":
-    region     => $region,
-    department => $department,
-    project    => $project,
-    vpc_mask   => $vpc_mask,
-    vpc_name   => "${project}-${department}-vpc",
-    created_by => $created_by,
-    require    => Awsdemo::Vpc[$project],
-  }
   awsdemo::pe_node { "${project}-${department}-${created_by}-master":
     availability_zone => $availability_zone,
-    image_id          => $awsdemo::params::ami[$region]['redhat7'],
+    image_id          => $image_ids[$region]['redhat7'],
     region            => $region,
     instance_type     => $master_instance_type,
     security_groups   => [
       "${project}-${department}-master",
       "${project}-${department}-crossconnect"
     ],
-    subnet            => $awsdemo::params::awz[$region],
+    subnet            => "${project}-${department}-avza",
     department        => $department,
     project           => $project,
     created_by        => $created_by,
@@ -59,9 +51,6 @@ class awsdemo (
     pe_role           => 'aio',
     pe_build          => $pe_build,
     iam_profile       => $master_iam_profile,
-    require           => [
-      Awsdemo::Vpc["${project}-${department}"],
-      Awsdemo::Securitygroups["${project}-${department}"]
-    ]
+    require           => Awsdemo::Vpc["${project}-${department}"]
   }
 }
