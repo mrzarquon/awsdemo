@@ -13,6 +13,6 @@ Awsdemo::Linuxnode {
   subnet          => 'tse-subnet-avza-1',
 }
 
-awsdemo::linuxnode { ['redhat7-01','redhat7-02']:
+awsdemo::linuxnode { ['redhat7-01','redhat7-02', 'redhat7-03']:
   pp_role => 'webserver',
 }
