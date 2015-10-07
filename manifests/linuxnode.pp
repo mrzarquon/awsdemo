@@ -14,7 +14,7 @@ define awsdemo::linuxnode (
   $nodename           = $title,
   $availability_zone  = $::ec2_metadata['placement']['availability-zone'],
   $region             = $::ec2_region,
-  $instance_type      = 'm4.medium',
+  $instance_type      = 'm4.large',
 ) {
   include awsdemo::params
 
