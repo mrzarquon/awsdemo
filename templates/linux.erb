@@ -2,7 +2,7 @@
 
 # ERB generated userdata script
 
-PE_MASTER='<%= @pe_master_hostname %>'
+PE_MASTER='<%= @pe_master %>'
 AWS_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 
 <%- if @nodename -%>
@@ -11,7 +11,7 @@ AWS_INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 PE_CERTNAME="<%= @nodename %>-${AWS_INSTANCE_ID}"
 
 <%- else -%>
-PE_CERTNAME="${AWS_INSTANCE_ID}" 
+PE_CERTNAME="${AWS_INSTANCE_ID}"
 
 <%- end -%>
 # these are attributes we know already
@@ -20,7 +20,7 @@ PP_INSTANCE_ID="${AWS_INSTANCE_ID}"
 <%- if @pp_image_name -%>
 PP_IMAGE_NAME='<%= @pp_image_name %>'
 <%- else -%>
-PP_IMAGE_NAME=$(curl -s http://169.254.169.254/latest/meta-data/ami-id) 
+PP_IMAGE_NAME=$(curl -s http://169.254.169.254/latest/meta-data/ami-id)
 <%- end -%>
 
 <%-# these are all the OIDs that we may map or already have -%>
@@ -62,7 +62,7 @@ extension_requests:
   1.3.6.1.4.1.34380.1.1.11: '<%= @pp_created_by %>'
 <%- end -%>
 <%- if @pp_environment -%>
-  1.3.6.1.4.1.34380.1.1.12: '<%= @pp_environment %>' 
+  1.3.6.1.4.1.34380.1.1.12: '<%= @pp_environment %>'
 <%- end -%>
 <%- if @pp_role -%>
   1.3.6.1.4.1.34380.1.1.13: '<%= @pp_role %>'
@@ -71,7 +71,7 @@ extension_requests:
   1.3.6.1.4.1.34380.1.1.14: '<%= @pp_software_version %>'
 <%- end -%>
 <%- if @pp_department -%>
-  1.3.6.1.4.1.34380.1.1.15: '<%= @pp_department %>' 
+  1.3.6.1.4.1.34380.1.1.15: '<%= @pp_department %>'
 <%- end -%>
 <%- if @pp_cluster -%>
   1.3.6.1.4.1.34380.1.1.16: '<%= @pp_cluster %>'

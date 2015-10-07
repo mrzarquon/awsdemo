@@ -16,7 +16,7 @@ class awsdemo::example (
       'project'       => $ec2_tags['project'],
       'created_by'    => $ec2_tags['created_by'],
     },
-    user_data         => template('tse_awsnodes/linux.erb'),
+    user_data         => template('awsdemo/linux.erb'),
   }
 
 }
