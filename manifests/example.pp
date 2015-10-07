@@ -6,7 +6,7 @@ class awsdemo::example (
   ec2_instance { "examplenode-${ec2_tags['created_by']}":
     ensure            => 'running',
     availability_zone => $ec2_metadata['placement']['availability-zone'],
-    image_id          => $image_ids[$region]['redhat7'],
+    image_id          => $image_ids[$ec2_region]['redhat7'],
     instance_type     => 'm4.large',
     region            => $ec2_region,
     security_groups   => ['tse-agents','tse-crossconnect'],
