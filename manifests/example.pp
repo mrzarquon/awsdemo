@@ -1,14 +1,16 @@
-class tse_awsnodes::example {
-  include tse_awsnodes::params
+class awsdemo::example (
+  $image_ids = $awsdemo::params::image_ids,
+  $pe_master = $server,
+){
 
-  ec2_instance { "examplenode-${ectags['created_by']}":
+  ec2_instance { "examplenode-${ec2_tags['created_by']}":
     ensure            => 'running',
-    availability_zone => '$::ec2_placement_availability_zone',
-    image_id          => $tse_awsnodes::params::amazonlinux,
-    instance_type     => 't2.micro',
+    availability_zone => $ec2_metadata['placement']['availability-zone'],
+    image_id          => $image_ids[$region]['redhat7'],
+    instance_type     => 'm4.large',
     region            => $ec2_region,
     security_groups   => ['tse-agents','tse-crossconnect'],
-    subnet            => $tse_awsnodes::params::subnet,
+    subnet            => 'tse-subnet-avza-1',
     tags              => {
       'department'    => $ec2_tags['department'],
       'project'       => $ec2_tags['project'],

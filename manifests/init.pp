@@ -10,7 +10,6 @@ class awsdemo (
   $project,
   $department,
   $master_iam_profile,
-  $pe_build = 'latest',
   $master_instance_type = 'm4.xlarge',
   $pe_build = '2015.2.0',
   $vpc_mask    = '10.90.0.0',
@@ -50,6 +49,7 @@ class awsdemo (
     pe_admin_password => $pe_admin_password,
     pe_role           => 'aio',
     pe_build          => $pe_build,
+    pe_dns_altnames   => 'master',
     iam_profile       => $master_iam_profile,
     require           => Awsdemo::Vpc["${project}-${department}"]
   }

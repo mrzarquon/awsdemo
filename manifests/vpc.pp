@@ -35,41 +35,50 @@ define awsdemo::vpc (
   ec2_vpc_subnet { "${name}-avza":
     ensure                  => present,
     region                  => $region,
-    vpc                     => $name,
+    vpc                     => $vpc_name,
     cidr_block              => "${zone_a_mask}/24",
     availability_zone       => "${region}a",
     route_table             => $routes_name,
     map_public_ip_on_launch => true,
-    require                 => Ec2_vpc[$vpc_name],
+    require                 => [
+      Ec2_vpc[$vpc_name],
+      Ec2_vpc_routetable[$routes_name],
+    ],
     tags                    => $aws_tags,
   }
   ec2_vpc_subnet { "${name}-avzb":
     ensure                  => present,
     region                  => $region,
-    vpc                     => $name,
+    vpc                     => $vpc_name,
     cidr_block              => "${zone_b_mask}/24",
     availability_zone       => "${region}b",
     route_table             => $routes_name,
     map_public_ip_on_launch => true,
-    require                 => Ec2_vpc[$vpc_name],
+    require                 => [
+      Ec2_vpc[$vpc_name],
+      Ec2_vpc_routetable[$routes_name],
+    ],
     tags                    => $aws_tags,
   }
   ec2_vpc_subnet { "${name}-avzc":
     ensure                  => present,
     region                  => $region,
-    vpc                     => $name,
+    vpc                     => $vpc_name,
     cidr_block              => "${zone_c_mask}/24",
     availability_zone       => "${region}c",
     route_table             => $routes_name,
     map_public_ip_on_launch => true,
-    require                 => Ec2_vpc[$vpc_name],
+    require                 => [
+      Ec2_vpc[$vpc_name],
+      Ec2_vpc_routetable[$routes_name],
+    ],
     tags                    => $aws_tags,
   }
 
   ec2_vpc_internet_gateway { $igw_name:
     ensure  => present,
     region  => $region,
-    vpc     => $name,
+    vpc     => $vpc_name,
     require => Ec2_vpc[$vpc_name],
     tags    => $aws_tags,
   }
