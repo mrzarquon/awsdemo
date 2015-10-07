@@ -1,7 +1,7 @@
 class awsdemo::example (
   $image_ids = $awsdemo::params::image_ids,
 ) inherits awsdemo::params {
-  $pe_master = $servername
+  $pe_master = $ec2_metadata['local-hostname']
 
   ec2_instance { "examplenode-${ec2_tags['created_by']}":
     ensure            => 'running',
