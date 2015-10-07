@@ -1,9 +1,11 @@
 # this defines a wrapper class, really to capture the params so they can be
-# evaled by the templating engine
+# evaled by the templating engine. This assumes it is being run from the master
+
 define awsdemo::linuxnode (
   $pp_department,
   $pp_project,
   $pp_created_by,
+  $pp_role,
   $key_name,
   $image_ids,
   $security_groups,
