@@ -1,4 +1,4 @@
-class awsdemo::example (
+  class awsdemo::example (
   $image_ids = $awsdemo::params::image_ids,
 ) inherits awsdemo::params {
   $pe_master_hostname = $::ec2_metadata['local-hostname']

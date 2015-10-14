@@ -25,7 +25,7 @@ extension_requests:
   pp_image_name: $PP_IMAGE_NAME
   1.3.6.1.4.1.34380.1.1.7: 'awsdemo'
   1.3.6.1.4.1.34380.1.1.11: 'chrisbarker'
-  1.3.6.1.4.1.34380.1.1.13: 'webserver'
+  pp_role: 'webserver'
   1.3.6.1.4.1.34380.1.1.15: 'tse'
 YAML
 }
