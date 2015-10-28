@@ -13,7 +13,6 @@ define awsdemo::windowsnode (
   $region             = $::ec2_region,
   $instance_type      = 'm4.large',
 ) {
-  include awsdemos::params
 
   ec2_instance { $nodename:
     ensure            => 'running',
@@ -30,7 +29,5 @@ define awsdemo::windowsnode (
       'created_by'    => $pp_created_by,
     },
     user_data         => template('awsdemo/windows.erb'),
-}
-
-
+  }
 }
