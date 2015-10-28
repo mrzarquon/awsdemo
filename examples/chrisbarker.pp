@@ -5,5 +5,5 @@ class {'awsdemo':
   created_by         => 'chrisbarker',
   project            => 'awsdemo',
   department         => 'tse',
-  master_iam_profile => 'puppetlabs_provisioner',
+  master_iam_profile => 'certsigner_addtags',
 }

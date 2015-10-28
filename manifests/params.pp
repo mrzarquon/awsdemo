@@ -7,7 +7,7 @@ class awsdemo::params {
     'us-west-2' => {
       'redhat7' => 'ami-4dbf9e7d',
       'redhat6' => 'ami-2faa861f',
-      'windows2012' => 'ami-67c7ff57',
+      'windows2012' => 'ami-f8f715cb',
       'windows2008' => 'ami-73b08843',
       'ubuntu1404' => 'ami-3b14370b',
       'ubuntu1204' => 'ami-fd7959cd',
