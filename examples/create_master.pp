@@ -14,7 +14,7 @@ awsdemo::pe_node { 'tse-testmaster' :
   key_name          => 'chris.barker',
   pe_admin_password => 'puppetlabs',
   pe_role           => 'aio',
-  pe_build          => '2015.2.0',
+  pe_build          => '2015.2.2',
   pe_dns_altnames   => 'tsemaster',
   iam_profile       => 'puppetlabs_aws_provisioner',
 }

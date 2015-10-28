@@ -16,7 +16,6 @@ define awsdemo::linuxnode (
   $region             = $::ec2_region,
   $instance_type      = 'm4.large',
 ) {
-  include awsdemo::params
 
   ec2_instance { $nodename:
     ensure            => 'running',
