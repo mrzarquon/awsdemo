@@ -18,7 +18,7 @@ awsdemo::linuxnode { ['redhat7-01','redhat7-02']:
 }
 
 
-awsdemo::windowsnodes { 'windows2012-01':
+awsdemo::windowsnode { 'windows2012-01':
   pp_department   => $ec2_tags['department'],
   pp_project      => $ec2_tags['project'],
   pp_created_by   => $ec2_tags['created_by'],
