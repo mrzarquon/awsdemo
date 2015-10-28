@@ -22,6 +22,7 @@ awsdemo::windowsnode { 'windows2012-01':
   pp_department   => $ec2_tags['department'],
   pp_project      => $ec2_tags['project'],
   pp_created_by   => $ec2_tags['created_by'],
+  pp_role         => 'demo',
   key_name        => $key_name,
   image_ids       => $awsdemo::params::image_ids,
   security_groups => ['tse-agents','tse-crossconnect'],
