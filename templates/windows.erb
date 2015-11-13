@@ -20,10 +20,10 @@ $AWS_INSTANCE_ID     = $webclient.DownloadString("$AWS_SERVER/latest/meta-data/i
 <%- if @nodename -%>
 # since we were passed @nodename we are prepending it
 # to instance-id
-$PE_CERTNAME = "<%= @nodename %>-$AWS_INSTANCE_ID"
+$PUPPET_CERTNAME = "<%= @nodename %>-$AWS_INSTANCE_ID"
 
 <%- else -%>
-$PE_CERTNAME = $AWS_INSTANCE_ID
+$PUPPET_CERTNAME = $AWS_INSTANCE_ID
 
 <%- end -%>
 # these are attributes we know already
