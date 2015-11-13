@@ -11,6 +11,7 @@ define awsdemo::windowsnode (
   $nodename           = $title,
   $availability_zone  = $::ec2_metadata['placement']['availability-zone'],
   $region             = $::ec2_region,
+  $aio_version        = $::aio_version,
   $instance_type      = 'm4.large',
 ) {
 
